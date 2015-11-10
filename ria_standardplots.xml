@@ -1,0 +1,60 @@
+<tool id="standardplots" name="Standardplots_ria" version="1.0.0" force_history_refresh="True">
+  <requirements>
+    <requirement type="package" version="1.0.0">ria_standardplots</requirement>
+    <requirement type="package" version="1.0.0">R</requirement>
+  </requirements>
+   <description>Generating Standard Plots for Simulation Outputs</description>
+  <command>ria_standardplots.sh $title $plot_type $plotvar $inputfiles $pngoutput </command>
+  <inputs>
+    <param name="title" value=" " type="text" label="Plot Title" help="Give a name for the plot" />
+    <param name="plotvar" type="select" label="Plot Variable">
+        <option selected="yes" value="HWAH_S">Simulated harvest yield,dry matter (HWAH_S)</option>
+        <option value="CWAH_S">Simulated above-ground biomass at harvest,dry matter (CWAH_S)</option>
+        <option value="ADAT_S">Simulated anthesis day (ADAT_S)</option>
+        <option value="MDAT_S">Simulated maturity day (MDAT_S)</option>
+        <option value="HADAT_S">Simulated harvest day (ADAT_S)</option>
+        <option value="LAIX_S">Simulated leaf area index, maximum (LAIX_S)</option>
+        <option value="PRCP_S">Total precipitation from planting to harvest (PRCP_S)</option>
+        <option value="ETCP_S">Simulated evapotranspiration, planting to harvest (ETCP_S)</option>
+        <option value="NUCM_S">Simulated N uptake during season (NUCM_S)</option>
+        <option value="NLCM_S">Simulated N leached up to harvest maturity (NLCM_S)</option>
+    </param>
+    <param name="plot_type" optional="false" type="select" display="radio" label="Plot Type">
+        <option value="b">BoxPlot</option>
+        <option value="c">CDF</option>
+    </param>
+    <repeat name="macocsvinput" title="Acmo_csv">
+            <param name="acmocsv" type="data" format="csv" label="Acmo csv Input" />
+            <param name="group" label="Outout Name" value="" type="text" help="This is the name of each plotting line or box, naming observation, histroy or 1961-2014 for plot variable HWAH_S or HAHAT_S will plot observated value " />
+            <param name="color" label="Output Color" type="select" help="This is the color of each ploting line or box" >
+                <option selected="yes" value="black">Black</option>
+                <option value="red">Red</option>
+                <option value="white">White</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="magenta">Magenta</option>
+                <option value="cyan">Cyan</option>
+                <option value="gold">Gold</option>
+                <option value="purple">Purple</option>
+                <option value="orange">Orange</option>
+                <option value="pink">Pink</option>
+                <option value="olive green">Olive green</option>
+            </param>
+    </repeat>
+  </inputs>
+  <configfiles>
+<configfile name="inputfiles">
+"csv" "group" "color"
+#for $i, $s in enumerate( $macocsvinput ):
+#if $s.acmocsv!="":
+${s.acmocsv} ${s.group} ${s.color}
+#end if
+#end for</configfile>
+  </configfiles>
+  <outputs>
+    <data format="png" name="pngoutput" label="Simulation Output Plots" />
+  </outputs>
+  <help>
+  </help>
+</tool>
+

@@ -1,0 +1,59 @@
+<tool id="standardplots" name="Standardplots_ria" version="1.0.0" force_history_refresh="True">
+    <requirements>
+        <requirement type="package" version="1.0.0">ria_standardplots</requirement>
+        <requirement type="package" version="1.0.0">R</requirement>
+    </requirements>
+    <description>Generating Standard Plots for Simulation Outputs</description>
+    <command>ria_standardplots.sh $title $plot_type.type $plot_type.plotvar $inputfiles $pngoutput </command>
+    <inputs>
+        <param name="title" value=" " type="text" label="Plot Title" help="Give a name for the plot" />
+        <conditional name="plot_type">
+            <param name="type" type="select" lable="Plot Type" help="CDF: comparison simulation to observations, BoxPlot: plot scenario based simulations.">
+                <option selected="yes" value="c">CDF</option>
+                <option value="b">BoxPlot</option>
+            </param>
+            <when value="c">
+                <param name="plotvar" type="select" label="Plot Variable">
+                    <option selected="yes" value="HWAH">Yield at harvest maturity (HWAM)</option>
+                    <option value="MDAT">Physiological maturity date (MDAT)</option>
+                </param>
+                <repeat name="macocsvinput" title="Acmo_csv">
+                    <param name="acmocsv" type="data" format="csv" label="Acmo csv Input" />
+                    <param name="group" label="Outout Name" value="" type="text" help="This is the name of each plotting line or box, default is the name of acmo file"/>
+                    <param name="color" label="Output Color" value="" type="text" help="This is the color of each ploting line or box: Red, Blue, Green..., default is black"/>
+                </repeat>
+            </when>
+            <when value="b">
+                <param name="plotvar" type="select" label="Plot Variable">
+                    <option selected="yes" value="HWAH_S">Simulated harvest yield,dry matter (HWAH_S)</option>
+                    <option value="CWAH_S">Simulated above-ground biomass at harvest,dry matter (CWAH_S)</option>
+                    <option value="LAIX_S">Simulated leaf area index, maximum (LAIX_S)</option>
+                    <option value="PRCP_S">Total precipitation from planting to harvest (PRCP_S)</option>
+                    <option value="ETCP_S">Simulated evapotranspiration, planting to harvest (ETCP_S)</option>
+                    <option value="NUCM_S">Simulated N uptake during season (NUCM_S)</option>
+                    <option value="NLCM_S">Simulated N leached up to harvest maturity (NLCM_S)</option>
+                </param>
+                <repeat name="macocsvinput" title="Acmo_csv">
+                    <param name="acmocsv" type="data" format="csv" label="Acmo csv Input" />
+                    <param name="group" label="Outout Name" value="${acmocsv}" type="text" help="This is the name of each plotting line or box, default is the name of acmo file"/>
+                    <param name="color" label="Output Color" value="black" type="text" help="This is the color of each ploting line or box: Red, Blue, Green..., default is black"/>
+                </repeat>
+            </when>
+        </conditional>
+    </inputs>
+    <configfiles>
+        <configfile name="inputfiles">
+            "csv" "group" "color"
+            #for $i, $s in enumerate( $plot_type.macocsvinput ):
+            #if $s.acmocsv!="":
+            ${s.acmocsv} ${s.group} ${s.color}
+            #end if
+            #end for</configfile>
+    </configfiles>
+    <outputs>
+        <data format="png" name="pngoutput" label="Simulation Output Plots" />
+    </outputs>
+    <help>
+    </help>
+</tool>
+
